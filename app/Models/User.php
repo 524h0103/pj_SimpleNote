@@ -18,7 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ['display_name', 'email', 'password', 'font_size', 'note_color', 'theme', 'note_password', 'locked_until'];
+    protected $fillable = ['display_name', 'email', 'password', 'note_password', 'font_size', 'note_color', 'theme'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -27,6 +27,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'note_password',
         'remember_token',
     ];
 
@@ -40,6 +41,11 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'note_password' => 'hashed',
         ];
+    }
+
+    public function notes() {
+        return $this->hasMany(Note::class);
     }
 }

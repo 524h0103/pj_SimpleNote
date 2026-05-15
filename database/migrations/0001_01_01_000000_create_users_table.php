@@ -16,10 +16,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            $table->string('note_password')->nullable();
-            $table->integer('wrong_password_count')->default(0);
-            $table->timestamp('locked_until')->nullable(); 
+            $table->string('note_password')->nullable(); 
             
             //kích hoạt tk
             $table->boolean('is_activated')->default(false);
