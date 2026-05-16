@@ -9,6 +9,7 @@ use Exception;
 class NoteService
 {
     protected $noteRepository;
+    protected $imageService;
 
     public function __construct(NoteRepository $noteRepository)
     {

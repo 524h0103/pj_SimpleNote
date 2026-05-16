@@ -13,11 +13,11 @@ class NoteRepository implements INoteRepository
         return Note::find($id);
     }
 
+    //lấy data
     public function getAll(): Collection
     {
         return Note::get();
     }
-
     public function getByUserId(int $userId)
     {
         return Note::where('user_id', $userId)
@@ -26,7 +26,7 @@ class NoteRepository implements INoteRepository
             ->get();
     }
 
-    // Tạo ghi chú mới
+    //tạo gchu mới etc
     public function create(array $data)
     {
         return Note::create($data);

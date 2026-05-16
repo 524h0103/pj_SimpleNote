@@ -23,11 +23,9 @@ class StoreNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required_without_all:img|nullable|string|max:255',         
-            'content' => 'required_without_all:img|nullable|string',
-            'img' => 'required_without_all:title,content|nullable|img|mimes:jpeg,png,jpg,gif|max:2048', 
-            
-            'color' => 'nullable|string|max:7',
+            'title' => 'required_without_all:image|nullable|string|max:255',         
+            'content' => 'required_without_all:image|nullable|string',
+            'img' => 'required_without_all:title,content|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',             
             'is_pinned' => 'nullable|boolean',
         ];
     }
@@ -38,7 +36,7 @@ class StoreNoteRequest extends FormRequest
         //thiếu
         'title.required_without_all' => 'Vui lòng nhập tiêu đề/nội dung hoặc thêm một hình ảnh.',
         'content.required_without_all' => 'Vui lòng nhập tiêu đề/nội dung hoặc thêm một hình ảnh.',
-        'image.required_without_all' => 'Vui lòng nhập tiêu đề/nội dung hoặc thêm một hình ảnh.',
+        'img.required_without_all' => 'Vui lòng nhập tiêu đề/nội dung hoặc thêm một hình ảnh.',
         
         //lỗi định dạng
         'img.image' => 'File tải lên phải là định dạng hình ảnh.',

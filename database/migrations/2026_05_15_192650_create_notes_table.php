@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('content')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('is_pinned')->default(false); //ghim gchu

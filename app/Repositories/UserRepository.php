@@ -6,14 +6,14 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function update(int $userId, array $data)
+    public function findById(int $id): ?User
     {
-        $user = User::findOrFail($userId);
-        return $user->update($data);
+        return User::find($id);
     }
 
-    public function find(int $id)
+    public function save(User $user): User
     {
-        return User::findOrFail($id);
+        $user->save();
+        return $user;
     }
 }
