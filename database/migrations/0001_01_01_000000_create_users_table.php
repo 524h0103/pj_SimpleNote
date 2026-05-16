@@ -13,10 +13,10 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('display_name');
+            $table->string('avatar')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('note_password')->nullable(); 
             
             //kích hoạt tk
             $table->boolean('is_activated')->default(false);
@@ -24,7 +24,6 @@ return new class extends Migration
 
             //giao diện ng dùng
             $table->integer('font_size')->default(16);
-            $table->string('note_color')->default('#ffffff'); 
             $table->string('theme')->default('light');
             
             $table->rememberToken();
@@ -51,8 +50,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

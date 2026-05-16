@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title')->nullable();
             $table->text('content')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('note_color')->default('#ffffff');
             $table->boolean('is_pinned')->default(false); //ghim gchu
             $table->timestamp('pinned_at')->nullable();
             $table->boolean('is_locked')->default(false);
+            $table->string('note_password')->nullable();
             $table->timestamps();
         });
 
@@ -51,6 +53,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        Schema::dropIfExists('note_images');
+        Schema::dropIfExists('note_shares');
+        Schema::dropIfExists('note_label');
+        Schema::dropIfExists('labels');
         Schema::dropIfExists('notes');
     }
 };

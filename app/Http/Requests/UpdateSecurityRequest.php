@@ -21,9 +21,10 @@ class UpdateSecurityRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            //
-        ];
-    }
+{
+    return [
+        'display_name' => 'required|string|max:255',
+        'note_password' => 'nullable|string|min:6|confirmed', 
+    ];
+}
 }

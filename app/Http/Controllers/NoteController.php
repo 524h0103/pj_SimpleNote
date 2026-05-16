@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateNoteRequest;
 use App\Services\NoteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class NoteController extends Controller
 {
@@ -17,7 +18,7 @@ class NoteController extends Controller
         $this->noteService = $noteService;
     }
 
-    //ds gchu + chức năng tìm kiếm
+    //ds gchu + tìm kiếm
     public function index(Request $request)
     {
         $userId = Auth::id();
@@ -27,6 +28,7 @@ class NoteController extends Controller
         return view('notes.index', compact('notes'));
     }
 
+    //tạo gchu mới
     public function store(StoreNoteRequest $request)
     {
         $this->noteService->createNote(Auth::id(), $request->validated());
@@ -34,26 +36,45 @@ class NoteController extends Controller
         return redirect()->route('notes.index')->with('status', 'Tạo ghi chú thành công!');
     }
 
-    //xem chi tiết gchu
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $note = $this->noteService->getNoteDetail($id, Auth::id());
+        try {
+            //nếu tạo xong lưu xong lần đầu click từ Dashboard, chưa có pass thì tham số thứ 3 sẽ là null
+            $note = $this->noteService->getNoteDetail($id, Auth::id(), $request->input('note_password'));
 
-        if (!$note) {
-            return back()->with('error_modal', 'Không tìm thấy ghi chú này!');
+            return view('notes.show', compact('note'));
+        } catch (Exception $e) {
+            //phản hồi yc pass
+            if ($e->getMessage() === 'password_required') {
+                //trở lại dashboard nhưng vẫn có modal nhập pass
+                return back()->with('open_lock_modal', $id);
+            }
+
+            //check lỗi
+            return redirect()->route('notes.index')->with('error_modal', $e->getMessage());
         }
-
-        return view('notes.dashboard', compact('note'));
     }
 
+    //xác nhận pass
+    public function unlock(Request $request, $id)
+    {
+        try {
+            $this->noteService->getNoteDetail($id, Auth::id(), $request->input('note_password'));
+            
+            return redirect()->route('notes.show', ['note' => $id, 'note_password' => $request->input('note_password')]);
+        } catch (Exception $e) {
+            return back()->with('open_lock_modal', $id)->withErrors(['note_password' => 'Mật khẩu ghi chú không chính xác!']);
+        }
+    }
+
+    //cập nhật
     public function update(UpdateNoteRequest $request, $id)
     {
-        $note = $this->noteService->updateNote($id, Auth::id(), $request->validated());
-
-        if (!$note) {
-            return back()->with('error_modal', 'Không thể cập nhật do ghi chú không tồn tại!');
+        try {
+            $this->noteService->updateNote($id, Auth::id(), $request->validated());
+            return redirect()->route('notes.index')->with('status', 'Cập nhật ghi chú thành công!');
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors(['error_action' => $e->getMessage()]);
         }
-
-        return redirect()->route('notes.index')->with('status', 'Cập nhật ghi chú thành công!');
     }
 }

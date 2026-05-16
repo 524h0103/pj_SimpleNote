@@ -12,9 +12,12 @@ class AppearanceService {
     }
 
     public function updateAppearance(int $userId, array $data) {
-        // Bạn có thể xử lý thêm logic ở đây, ví dụ: 
-        // Nếu người dùng chọn màu quá sáng, bạn tự động chỉnh lại...
+        $user = $this->userRepository->findById($userId);
+        if (!$user) return null;
+
+        $user->theme = $data['theme'];
+        $user->font_size = $data['font_size'];
         
-        return $this->userRepository->update($userId, $data);
+        return $this->userRepository->save($user);
     }
 }
